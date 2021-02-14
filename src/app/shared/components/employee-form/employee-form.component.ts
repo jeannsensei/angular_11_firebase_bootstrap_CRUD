@@ -7,18 +7,25 @@ import { Employee } from '../../models/employee.interface';
 @Component({
   selector: 'app-employee-form',
   templateUrl: './employee-form.component.html',
-  styleUrls: ['./employee-form.component.scss']
+  styleUrls: ['./employee-form.component.scss'],
 })
 export class EmployeeFormComponent implements OnInit {
-
   employee: Employee;
   employeeForm: FormGroup;
 
   private isEmail = /\S+@\S+\.\S+/;
 
-  constructor(private router: Router, private fb: FormBuilder, private employeesSvc: EmployeesService) {
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private employeesSvc: EmployeesService
+  ) {
     const navigation = this.router.getCurrentNavigation();
+    console.log(navigation);
+
     this.employee = navigation?.extras?.state?.value;
+    console.log(this.employee);
+
     this.initForm();
   }
 
@@ -38,7 +45,6 @@ export class EmployeeFormComponent implements OnInit {
       this.employeesSvc.onSaveEmployee(employee, employeeId);
       this.employeeForm.reset();
     }
-
   }
 
   onGoBackToList(): void {
@@ -47,8 +53,11 @@ export class EmployeeFormComponent implements OnInit {
 
   isValidField(field: string): string {
     const validatedField = this.employeeForm.get(field);
-    return (!validatedField.valid && validatedField.touched)
-      ? 'is-invalid' : validatedField.touched ? 'is-valid' : '';
+    return !validatedField.valid && validatedField.touched
+      ? 'is-invalid'
+      : validatedField.touched
+      ? 'is-valid'
+      : '';
   }
 
   private initForm(): void {
@@ -59,5 +68,4 @@ export class EmployeeFormComponent implements OnInit {
       startDate: ['', [Validators.required]],
     });
   }
-
 }
